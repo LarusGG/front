@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  
+    <meta charset="utf-8" />
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <title></title>
+</head>
+<body class="body">
+    <div class="container">
+
+        <div class="row padding-top-xxl">
+            <div class="col-12 mb-3">
+                <h5 class="centered">Sign in to your account</h5>
+
+            </div>
+        </div>
+       
+        <div class="form-group row ">
+            <div class="col-12 col-sm-2 col-md-3 col-lg-4"></div>
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+                <input id="name" class="form-control" type="text" />
+            </div>
+        </div>
+        
+        <div class="form-group row password ">
+            <div class="col-12 col-sm-2 col-md-3 col-lg-4"></div>
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+                <input id="password" class="form-control" type="password" />
+            </div>
+        </div>
+        
+        <div class="row mb-1">
+            <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4 btn-group-block">
+                <input id="Submit1" class="btn btn-lg btn-primary btn-block" type="submit" value="submit" />
+            </div>
+        </div>
+
+    </div>
+    <script>
+
+        Submit1.onclick = async () => {
+
+            let name = document.getElementById('name')
+            let password = document.getElementById('password')
+            let user = {
+                name: name.value,
+                password: password.value
+            };
+            let response = await fetch('https://localhost:44319/api/login', {
+                method: 'POST',
+                
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
+            let token = await response.text();
+            window.localStorage.setItem('kursachToken', token)
+            console.log(token);
+            const res = await fetch("https://localhost:44319/api/UserInfo", {
+                method: 'GET',
+                //mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('kursachToken'),
+                },
+
+            });
+            const userInfo = await res.json();
+            console.log(userInfo);
+            let userName = userInfo.userName
+            let userRole = userInfo.role 
+            console.log(userRole);
+            if (userRole == "student" && userName == "maria@gmail.com")
+                window.location = " http://localhost:49234/PI-217.html";
+            else if (userRole == "student" && userName == "srusik@gmail.com")
+                window.location = " http://localhost:49234/PI-218.html";
+            else if (userRole == "student" && userName == "srusik@gmail.com")
+                window.location = " http://localhost:49234/PI-218.html";
+            else if (userRole == "staff" && userName == "staff@gmail.com")
+                window.location = " http://localhost:49234/ws.html";
+            else if (userRole == "staff" && userName == "admin@gmail.com")
+                window.location = " http://localhost:49234/Filter.html";
+            else if (userRole == "teacher" && userName == "ira@gmail.com") {
+                window.localStorage.setItem('id', 7)
+                window.location = " http://localhost:49234/ForTeacher.html";
+            }
+            else if (userRole == "teacher" && userName == "alla@gmail.com") {
+                window.localStorage.setItem('id', 8)
+                window.location = " http://localhost:49234/ForTeacher.html";
+            }
+        };
+
+        
+    </script>
+
+</body>
+</html>

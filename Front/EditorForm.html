@@ -1,0 +1,97 @@
+﻿<
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <title>EditorForm</title>
+</head>
+<body class="main">
+    <nav class="navbar" id="top-nav-bar">
+        <div class="nav-brand">
+            <h2>Timetable</h2>
+        </div>
+        <div class="nav-right">
+            <a class="nav-item hidden-xs-down" title="" data-toggle="tooltip" data-placement="bottom" href="/bills" data-original-title="Billing">
+
+                Log out
+            </a>
+        </div>
+    </nav>
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <div class="btn-group">
+        <select class="select form-control" id="SelectForGroup">
+            <option selected>Select group</option>
+            <option value="1">PІ-217</option>
+            <option value="2">PІ-218</option>
+        </select>
+    </div>
+    <div class="btn-group">
+        <select class="select form-control" id="SelectForSubject">
+            <option selected>Select subject</option>
+            <option value="7">Programing</option>
+            <option value="8">English</option>
+        </select>
+    </div>
+    <div class="btn-group">
+        <select class="select form-control" id="SelectForRoom">
+            <option selected>Select room</option>
+            <option value="1">6-202</option>
+            <option value="2">4-303</option>
+        </select>
+    </div>
+    <br />
+    <br />
+    <button type="button" id="test" class="btn btn-dark">Accept</button>
+    <script>
+
+        test.onclick = async () => {
+            let scheduleId = Number.parseInt(window.localStorage.getItem('scheduleId'));
+            console.log(scheduleId);
+            let numberLesson = Number.parseInt(window.localStorage.getItem('numberLesson'));
+            console.log(numberLesson);
+            let numberDay = Number.parseInt(window.localStorage.getItem('numberDay'));
+            console.log(numberDay);
+            let selectForGroup = document.getElementById("SelectForGroup");
+            let numberGroup = Number.parseInt(selectForGroup.value);
+            console.log(numberGroup);
+            let selectForSub = document.getElementById("SelectForSubject");
+            let numberSub = Number.parseInt(selectForSub.value);
+            console.log(numberSub);
+            let selectForRoom = document.getElementById("SelectForRoom");
+            let numberRoom = Number.parseInt(selectForRoom.value);
+            console.log(numberRoom);
+
+            let user = {
+                ScheduleId: scheduleId,
+                GroupId: numberGroup,
+                PersonId: numberSub,
+                lessonNumber: numberLesson,
+                RoomId: numberRoom,
+                weekDay: numberDay
+            };
+            let response = await fetch('https://localhost:44319/api/schedule/' + scheduleId, {
+                method: 'PUT',
+
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('kursachToken'),
+                },
+                body: JSON.stringify(user)
+            });
+            let token = await response.json();
+            console.log(token);
+            window.location = " http://localhost:49234/ws.html"
+        };
+
+
+    </script>
+</body>
+</html>

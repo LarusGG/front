@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <title>Main</title>
+    <style>
+        li {
+            list-style-type: none; /* Убираем маркеры */
+        }
+
+        ul {
+            margin-left: 0; /* Отступ слева в браузере IE и Opera */
+            padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+        }
+    </style>
+</head>
+<body class="main">
+
+    <nav class="navbar" id="top-nav-bar">
+        <div class="nav-brand">
+            <h2>Timetable</h2>
+        </div>
+        <div class="nav-right">
+            <a class="nav-item hidden-xs-down" title="" data-toggle="tooltip" data-placement="bottom" href="/bills" data-original-title="Billing">
+
+                Log out
+            </a>
+        </div>
+    </nav>
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <td scope="col">&nbsp;</td>
+                <td scope="col">Monday</td>
+                <td scope="col">Tuesday</td>
+                <td scope="col">Wednesday</td>
+                <td scope="col">Thursday</td>
+                <td scope="col">Friday</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="row">First<br />lesson</td>
+                <td id="mondaySchedule.firstLesson">&nbsp;</td>
+                <td id="tuesdaySchedule.firstLesson">&nbsp;</td>
+                <td id="wednesdaySchedule.firstLesson">&nbsp;</td>
+                <td id="thirsdaySchedule.firstLesson">&nbsp;</td>
+                <td id="fridaySchedule.firstLesson">&nbsp;</td>
+            </tr>
+            <tr>
+                <td scope="row">Second<br />lesson</td>
+                <td id="mondaySchedule.secondLesson">&nbsp;</td>
+                <td id="tuesdaySchedule.secondLesson">&nbsp;</td>
+                <td id="wednesdaySchedule.secondLesson">&nbsp;</td>
+                <td id="thirsdaySchedule.secondLesson">&nbsp;</td>
+                <td id="fridaySchedule.secondLesson">&nbsp;</td>
+            </tr>
+            <tr>
+                <td scope="row">Third<br />lesson</td>
+                <td id="mondaySchedule.thirdLesson">&nbsp;</td>
+                <td id="tuesdaySchedule.thirdLesson">&nbsp;</td>
+                <td id="wednesdaySchedule.thirdLesson">&nbsp;</td>
+                <td id="thirsdaySchedule.thirdLesson">&nbsp;</td>
+                <td id="fridaySchedule.thirdLesson">&nbsp;</td>
+            </tr>
+            <tr>
+                <td scope="row">Fourth<br />lesson&nbsp;</td>
+                <td id="mondaySchedule.fourthLesson">&nbsp;</td>
+                <td id="tuesdaySchedule.fourthLesson">&nbsp;</td>
+                <td id="wednesdaySchedule.fourthLesson">&nbsp;</td>
+                <td id="thirsdaySchedule.fourthLesson">&nbsp;</td>
+                <td id="fridaySchedule.fourthLesson">&nbsp;</td>
+            </tr>
+            <tr>
+                <td scope="row">Fifth<br />lesson&nbsp;</td>
+                <td id="mondaySchedule.fifthLesson">&nbsp;</td>
+                <td id="tuesdaySchedule.fifthLesson">&nbsp;</td>
+                <td id="wednesdaySchedule.fifthLesson">&nbsp;</td>
+                <td id="thirsdaySchedule.fifthLesson">&nbsp;</td>
+                <td id="fridaySchedule.fifthLesson">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+   
+    <script>
+
+        const getGroup = async () => {
+            const res = await fetch("https://localhost:44319/api/WeeklySchedule/getWeeklyScheduleByGroupId/1", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + window.localStorage.getItem('kursachToken'),
+                },
+
+            });
+            const user = await res.json();
+            return user;
+        }
+
+        getGroup().then(data => {
+            let days = Object.keys(data);
+            days.map(day => {
+                let lessons = Object.keys(data[day]);
+                lessons.map(lesson => {
+                    if (data[day][lesson].length) {
+
+                        let cell = document.getElementById(day + '.' + lesson);
+                        let ul = document.createElement("ul");
+                        cell.appendChild(ul);
+                        data[day][lesson].map(schedule => {
+                            console.log(schedule)
+                            let li = document.createElement("li");
+                            ul.appendChild(li);
+                            li.innerHTML += 'Group: ' + schedule.group.name + '<br/>' + 'Room: ' + schedule.room.roomName + '<br/>' + 'Subject: ' + schedule.teacher.subject + '<br/>' + 'Teacher: ' + schedule.teacher.person.lastName + ' ' + schedule.teacher.person.firstName + '<br/><br/>';
+                        })
+                    }
+                })
+
+            })
+            //console.log(days)
+        })
+    </script>
+    
+</body>
+</html>
